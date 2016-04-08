@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="shire.the.great.conman">
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
+    <application
+        android:allowBackup="true"
+        android:label="@string/app_name"
+        android:supportsRtl="true">
+        <receiver android:name="shire.the.great.conman.receivers.SystemConnectivityReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".receivers.SystemWifiReceiver">
+            <intent-filter>
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+                <action android:name="android.net.wifi.STATE_CHANGE" />
+                <action android:name="android.net.wifi.RSSI_CHANGED" />
+                <action android:name="android.net.wifi.supplicant.STATE_CHANGE" />
+                <!--<action android:name="android.net.wifi.NETWORK_IDS_CHANGED" />-->
+                <!--<action android:name="android.net.wifi.supplicant.CONNECTION_CHANGE" />-->
+                <!--<action android:name="android.net.wifi.SCAN_RESULTS" />-->
+            </intent-filter>
+        </receiver>
+
+        <!--<service-->
+            <!--android:name="shire.the.great.conman.services.ConnectivityService"-->
+            <!--android:exported="true" />-->
+
+        <!--<service-->
+            <!--android:name="shire.the.great.conman.services.ConnectivityPollingService"-->
+            <!--android:exported="true" />-->
+
+
+
+    </application>
+
+</manifest>
