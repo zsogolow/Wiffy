@@ -25,9 +25,9 @@ import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.Wearable;
 
-import shire.the.great.conman.common.Constants;
-import shire.the.great.conman.common.WearConstants;
+import java.util.HashMap;
 
+import shire.the.great.wearman.common.WearConstants;
 import shire.the.great.wiffy.R;
 
 public class WatchActivity extends Activity implements
@@ -52,10 +52,13 @@ public class WatchActivity extends Activity implements
     private TextView mSuppStateTV;
     private TextView mDisconnectedTV;
     private TextView mConnectionNameTV;
+    private TextView mSubConnectionTV;
 
     private GoogleApiClient mGoogleApiClient;
 
     private int mConnectedCount = 0;
+
+    private HashMap<String, Integer> mUpdateIdMap;
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
@@ -83,11 +86,48 @@ public class WatchActivity extends Activity implements
                 mSsidTV = (TextView) findViewById(R.id.ssidTV);
                 mDisconnectedTV = (TextView) findViewById(R.id.disconnectedTV);
                 mConnectionNameTV = (TextView) findViewById(R.id.connectionNameTV);
+                mSubConnectionTV = (TextView) findViewById(R.id.subConnNameTV);
             }
         });
 
         mResolvingError = savedInstanceState != null
                 && savedInstanceState.getBoolean(STATE_RESOLVING_ERROR, false);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mConnectivityReceiver = new MyConnectivityReceiver();
+        mWearableConnectedReceiver = new WearConnectedBroadcastReceiver();
+        registerConnectivityReceiver();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (!mResolvingError) {  // more about this later
+            mGoogleApiClient.connect();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        Log.d(LOGTAG, "onStop");
+        sendMessageAsync(WearConstants.DISCONNECT);
+        unregisterConnectivityReceiver();
+        mGoogleApiClient.disconnect();
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.d(LOGTAG, "onStop");
+        super.onDestroy();
     }
 
     public void onWearWifiClicked(View view) {
@@ -106,6 +146,7 @@ public class WatchActivity extends Activity implements
             mSsidTV.setText("");
             mConnectionNameTV.setText(R.string.app_name);
             mWifiSwitch.setChecked(false);
+            mSubConnectionTV.setText("");
         } else {
             mDisconnectedTV.setText("");
         }
@@ -132,34 +173,6 @@ public class WatchActivity extends Activity implements
                 }
             }).start();
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mConnectivityReceiver = new MyConnectivityReceiver();
-        mWearableConnectedReceiver = new WearConnectedBroadcastReceiver();
-        registerConnectivityReceiver();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        if (!mResolvingError) {  // more about this later
-            mGoogleApiClient.connect();
-        }
-    }
-
-    @Override
-    protected void onStop() {
-        unregisterConnectivityReceiver();
-        mGoogleApiClient.disconnect();
-        super.onStop();
     }
 
     @Override
@@ -250,34 +263,48 @@ public class WatchActivity extends Activity implements
     class MyConnectivityReceiver extends BroadcastReceiver {
         @Override
         public void onReceive(Context context, Intent intent) {
+            Log.d(LOGTAG, intent.getIntExtra(WearConstants.UPDATE_ID, -100) + "");
+            int updateId = intent.getIntExtra(WearConstants.UPDATE_ID, -100);
             switch (intent.getAction()) {
                 case WearConstants.NETWORK_CONNECTION_DATA:
-                    String netName = intent.getStringExtra(WearConstants.NETWORK_NAME);
-                    String netSubName = intent.getStringExtra(WearConstants.NETWORK_SUB_NAME);
-                    String netState = intent.getStringExtra(WearConstants.NETWORK_STATE);
-                    String extraInfo = intent.getStringExtra(WearConstants.NETWORK_EXTRA_INFO);
-                    if (netName.equals("WIFI") && netState.equals("CONNECTED")) {
-                        mConnectionNameTV.setText(netName);
-                        mSsidTV.setText(extraInfo);
-                    } else if (netName.equals("MOBILE") && netState.equals("CONNECTED")) {
-                        mConnectionNameTV.setText(netName);
-                        mSsidTV.setText(netSubName);
+                    if (mUpdateIdMap.get(WearConstants.NETWORK_CONNECTION_DATA) < updateId) {
+                        mUpdateIdMap.put(WearConstants.NETWORK_CONNECTION_DATA, updateId);
+                        String netName = intent.getStringExtra(WearConstants.NETWORK_NAME);
+                        String netSubName = intent.getStringExtra(WearConstants.NETWORK_SUB_NAME);
+                        String netState = intent.getStringExtra(WearConstants.NETWORK_STATE);
+                        String extraInfo = intent.getStringExtra(WearConstants.NETWORK_EXTRA_INFO);
+                        if (netName.equals("WIFI") && netState.equals("CONNECTED")) {
+                            mConnectionNameTV.setText(netName);
+                            mSsidTV.setText(extraInfo);
+                            mSubConnectionTV.setText("");
+                        } else if (netName.equals("MOBILE") && netState.equals("CONNECTED")) {
+                            mConnectionNameTV.setText(netName);
+                            mSsidTV.setText("");
+                            mSubConnectionTV.setText(netSubName);
+                        }
                     }
                     break;
 
                 case WearConstants.WIFI_STATE_DATA:
-                    boolean wifiState = intent.getBooleanExtra(WearConstants.WIFI_STATE, false);
-                    boolean checked = mWifiSwitch.isChecked();
-                    if (!checked && wifiState) {
-                        mWifiSwitch.setChecked(true);
-                    } else if (checked && !wifiState) {
-                        mWifiSwitch.setChecked(false);
+                    if (mUpdateIdMap.get(WearConstants.WIFI_STATE_DATA) < updateId) {
+                        mUpdateIdMap.put(WearConstants.WIFI_STATE_DATA, updateId);
+                        boolean wifiState = intent.getBooleanExtra(WearConstants.WIFI_STATE, false);
+                        boolean checked = mWifiSwitch.isChecked();
+                        if (!checked && wifiState) {
+                            mWifiSwitch.setChecked(true);
+                        } else if (checked && !wifiState) {
+                            mWifiSwitch.setChecked(false);
+                        }
                     }
                     break;
+
                 case WearConstants.SUPPLICANT_STATE_DATA:
-                    String suppState = intent.getStringExtra(WearConstants.SUPPLICANT_STATE);
-                    Log.d(LOGTAG, suppState);
-                    mSuppStateTV.setText(suppState);
+                    if (mUpdateIdMap.get(WearConstants.SUPPLICANT_STATE_DATA) < updateId) {
+                        mUpdateIdMap.put(WearConstants.SUPPLICANT_STATE_DATA, updateId);
+                        String suppState = intent.getStringExtra(WearConstants.SUPPLICANT_STATE);
+                        Log.d(LOGTAG, suppState);
+                        mSuppStateTV.setText(suppState);
+                    }
                     break;
 
                 default:
@@ -291,6 +318,11 @@ public class WatchActivity extends Activity implements
         public void onReceive(Context context, Intent intent) {
             switch (intent.getAction()) {
                 case WearConstants.WEARABLE_CONNECTED:
+                    mUpdateIdMap = new HashMap<>();
+                    mUpdateIdMap.put(WearConstants.NETWORK_CONNECTION_DATA, -1);
+                    mUpdateIdMap.put(WearConstants.SUPPLICANT_STATE_DATA, -1);
+                    mUpdateIdMap.put(WearConstants.WIFI_STATE_DATA, -1);
+                    Log.d(LOGTAG, "receive connceted");
                     setDisconnectedFromPhone(false);
                     sendMessageAsync(WearConstants.CONNECT);
                     mConnectedCount++;

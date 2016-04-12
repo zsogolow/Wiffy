@@ -1,11 +1,11 @@
-package shire.the.great.conman.models.parcelables;
+package shire.the.great.wearman.models.parcelables;
 
 import android.net.NetworkInfo;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import shire.the.great.conman.models.dataapi.AbstractDataItem;
-import shire.the.great.conman.models.dataapi.DataItemType;
+import shire.the.great.wearman.models.dataapi.AbstractDataItem;
+import shire.the.great.wearman.models.dataapi.DataItemType;
 
 /**
  * Created by ZachS on 4/6/2016.

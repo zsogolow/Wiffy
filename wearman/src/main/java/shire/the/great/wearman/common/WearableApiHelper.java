@@ -1,6 +1,7 @@
-package shire.the.great.conman.common;
+package shire.the.great.wearman.common;
 
 import android.content.Context;
+import android.net.NetworkInfo;
 
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.PendingResult;
@@ -14,11 +15,11 @@ import com.google.android.gms.wearable.Wearable;
 
 import java.util.concurrent.TimeUnit;
 
-import shire.the.great.conman.models.dataapi.AbstractDataItem;
-import shire.the.great.conman.models.parcelables.ConnectionChange;
-import shire.the.great.conman.models.parcelables.NetworkStateChange;
-import shire.the.great.conman.models.parcelables.SupplicantStateChange;
-import shire.the.great.conman.models.parcelables.WifiStateChange;
+import shire.the.great.wearman.models.dataapi.AbstractDataItem;
+import shire.the.great.wearman.models.parcelables.ConnectionChange;
+import shire.the.great.wearman.models.parcelables.NetworkStateChange;
+import shire.the.great.wearman.models.parcelables.SupplicantStateChange;
+import shire.the.great.wearman.models.parcelables.WifiStateChange;
 
 /**
  * WearableApi helper class
@@ -92,6 +93,7 @@ public class WearableApiHelper {
                 putDataMapReqConn.getDataMap().putString(WearConstants.NETWORK_SUB_NAME, connectionChange.getNetworkSubName());
                 putDataMapReqConn.getDataMap().putString(WearConstants.NETWORK_STATE, connectionChange.getNetworkState().toString());
                 putDataMapReqConn.getDataMap().putString(WearConstants.NETWORK_EXTRA_INFO, connectionChange.getExtraInfo());
+                putDataMapReqConn.getDataMap().putInt(WearConstants.UPDATE_ID, dataItem.getUpdateId());
                 PutDataRequest putDataReqConn = putDataMapReqConn.asPutDataRequest();
                 putDataReqConn.setUrgent();
                 PendingResult<DataApi.DataItemResult> pendingResult =
@@ -102,6 +104,7 @@ public class WearableApiHelper {
                 WifiStateChange wifiStateChange = (WifiStateChange) dataItem;
                 PutDataMapRequest putDataMapReqWifi = PutDataMapRequest.create(WearConstants.WIFI_STATE_DATA);
                 putDataMapReqWifi.getDataMap().putInt(WearConstants.WIFI_STATE, wifiStateChange.getCurrentState());
+                putDataMapReqWifi.getDataMap().putInt(WearConstants.UPDATE_ID, dataItem.getUpdateId());
                 PutDataRequest putDataReqWifi = putDataMapReqWifi.asPutDataRequest();
                 putDataMapReqWifi.setUrgent();
                 PendingResult<DataApi.DataItemResult> pendingResultWifi =
@@ -113,6 +116,7 @@ public class WearableApiHelper {
                 SupplicantStateChange supplicantStateChange = (SupplicantStateChange) dataItem;
                 PutDataMapRequest putDataMapReqSupp = PutDataMapRequest.create(WearConstants.SUPPLICANT_STATE_DATA);
                 putDataMapReqSupp.getDataMap().putString(WearConstants.SUPPLICANT_STATE, supplicantStateChange.getSupplicantState().toString());
+                putDataMapReqSupp.getDataMap().putInt(WearConstants.UPDATE_ID, dataItem.getUpdateId());
                 PutDataRequest putDataReqSupp = putDataMapReqSupp.asPutDataRequest();
                 putDataReqSupp.setUrgent();
                 PendingResult<DataApi.DataItemResult> pendingResultSupp =
@@ -122,10 +126,19 @@ public class WearableApiHelper {
             case NetworkStateChange:
                 NetworkStateChange networkStateChange = (NetworkStateChange) dataItem;
                 PutDataMapRequest putDataMapReqNetChange = PutDataMapRequest.create(WearConstants.NETWORK_CONNECTION_DATA);
-                putDataMapReqNetChange.getDataMap().putString(WearConstants.NETWORK_NAME, networkStateChange.getNetworkInfo().getTypeName());
-                putDataMapReqNetChange.getDataMap().putString(WearConstants.NETWORK_SUB_NAME, networkStateChange.getNetworkInfo().getSubtypeName());
-                putDataMapReqNetChange.getDataMap().putString(WearConstants.NETWORK_STATE, networkStateChange.getNetworkInfo().getState().toString());
-                putDataMapReqNetChange.getDataMap().putString(WearConstants.NETWORK_EXTRA_INFO, networkStateChange.getSsidExtra());
+                NetworkInfo networkInfo = networkStateChange.getNetworkInfo();
+                String networkTypeName = "no connection", networkSubName = "", networkState = "", ssidExtra = "";
+                if (networkInfo != null) {
+                    networkTypeName = networkInfo.getTypeName();
+                    networkSubName = networkInfo.getSubtypeName();
+                    networkState = networkInfo.getState().toString();
+                    ssidExtra = networkStateChange.getSsidExtra();
+                }
+                putDataMapReqNetChange.getDataMap().putString(WearConstants.NETWORK_NAME, networkTypeName);
+                putDataMapReqNetChange.getDataMap().putString(WearConstants.NETWORK_SUB_NAME, networkSubName);
+                putDataMapReqNetChange.getDataMap().putString(WearConstants.NETWORK_STATE, networkState);
+                putDataMapReqNetChange.getDataMap().putString(WearConstants.NETWORK_EXTRA_INFO, ssidExtra);
+                putDataMapReqNetChange.getDataMap().putInt(WearConstants.UPDATE_ID, dataItem.getUpdateId());
                 PutDataRequest putDataReqNetChange = putDataMapReqNetChange.asPutDataRequest();
                 putDataReqNetChange.setUrgent();
                 PendingResult<DataApi.DataItemResult> pendingResultNetChange =

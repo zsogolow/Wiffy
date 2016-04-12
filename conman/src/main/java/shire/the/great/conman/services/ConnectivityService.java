@@ -9,8 +9,8 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.support.v4.content.LocalBroadcastManager;
 
-import shire.the.great.conman.common.Constants;
-import shire.the.great.conman.models.parcelables.NetworkStateChange;
+import shire.the.great.wearman.common.Constants;
+import shire.the.great.wearman.models.parcelables.NetworkStateChange;
 
 /**
  * Created by ZachS on 4/1/2016.

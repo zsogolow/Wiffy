@@ -3,8 +3,9 @@ package shire.the.great.wiffy.wear.services;
 import android.content.Context;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 
-import shire.the.great.conman.common.Constants;
+import shire.the.great.wearman.common.Constants;
 import shire.the.great.wiffy.wear.receivers.AlwaysActiveConnectivityReceiver;
 
 /**
@@ -17,7 +18,7 @@ public class AlwaysActiveSingleton {
     private static Context mContext;
     private static AlwaysActiveConnectivityReceiver mConnectivityReceiver;
 
-    private static boolean mIsRegistered = false;
+    public int mUpdateId;
 
     public static AlwaysActiveSingleton getInstance(Context context) {
         mContext = context;
@@ -26,32 +27,19 @@ public class AlwaysActiveSingleton {
             ourInstance = new AlwaysActiveSingleton();
         }
 
-        registerReceivers();
-
         return ourInstance;
     }
 
     public static void destroyInstance() {
-        unregisterReceivers();
+        unregisterConnectivityReceiver();
         ourInstance = null;
-    }
-
-    private static void registerReceivers() {
-        if (!mIsRegistered) {
-            registerConnectivityReceiver();
-            mIsRegistered = true;
-        }
-    }
-
-    private static void unregisterReceivers() {
-        if (mIsRegistered) {
-            unregisterConnectivityReceiver();
-            mIsRegistered = false;
-        }
     }
 
     private AlwaysActiveSingleton() {
         mConnectivityReceiver = new AlwaysActiveConnectivityReceiver();
+        registerConnectivityReceiver();
+        Log.d(LOGTAG, "creating singleton");
+        mUpdateId = 0;
     }
 
     private static void registerConnectivityReceiver() {
@@ -60,7 +48,7 @@ public class AlwaysActiveSingleton {
                 new IntentFilter(Constants.CONNECTIVITY_CHANGED_ACTION);
         IntentFilter mWifiStateChangedFilter =
                 new IntentFilter(Constants.WIFI_STATE_CHANGED_ACTION);
-        IntentFilter  mRssiFilter =
+        IntentFilter mRssiFilter =
                 new IntentFilter(Constants.RSSI_CHANGED_ACTION);
         IntentFilter mNetworkStateFilter =
                 new IntentFilter(Constants.NETWORK_STATE_CHANGED_ACTION);

@@ -1,4 +1,4 @@
-package shire.the.great.conman.common;
+package shire.the.great.wearman.common;
 
 /**
  * Created by ZachS on 4/1/2016.

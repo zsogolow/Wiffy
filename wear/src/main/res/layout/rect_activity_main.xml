@@ -31,7 +31,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceLarge"
-            android:text="Large Text"
             android:id="@+id/disconnectedTV"
             android:layout_above="@+id/wifiSwitch"
             android:layout_centerHorizontal="true" />
@@ -40,7 +39,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="Small Text"
             android:id="@+id/suppStateTV"
             android:layout_below="@+id/wifiSwitch"
             android:layout_centerHorizontal="true" />
@@ -49,7 +47,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Medium Text"
             android:id="@+id/ssidTV"
             android:layout_below="@+id/suppStateTV"
             android:layout_centerHorizontal="true" />
@@ -71,6 +68,14 @@
             android:id="@+id/connectionNameTV"
             android:layout_alignParentTop="true"
             android:layout_alignParentStart="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:id="@+id/subConnNameTV"
+            android:layout_below="@+id/connectionNameTV"
+            android:layout_alignParentLeft="true" />
 
     </RelativeLayout>
 

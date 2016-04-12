@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
-import android.net.Network;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -19,16 +18,16 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import shire.the.great.conman.models.parcelables.NetworkStateChange;
-import shire.the.great.conman.models.parcelables.RssiChange;
-import shire.the.great.conman.models.parcelables.ScanResultsChange;
-import shire.the.great.conman.models.parcelables.ConnectionChange;
-import shire.the.great.conman.models.parcelables.SupplicantConnectionChange;
-import shire.the.great.conman.models.parcelables.SupplicantStateChange;
-import shire.the.great.conman.models.parcelables.WifiStateChange;
+import shire.the.great.wearman.models.parcelables.NetworkStateChange;
+import shire.the.great.wearman.models.parcelables.RssiChange;
+import shire.the.great.wearman.models.parcelables.ScanResultsChange;
+import shire.the.great.wearman.models.parcelables.ConnectionChange;
+import shire.the.great.wearman.models.parcelables.SupplicantConnectionChange;
+import shire.the.great.wearman.models.parcelables.SupplicantStateChange;
+import shire.the.great.wearman.models.parcelables.WifiStateChange;
 import shire.the.great.conman.wifi.ConnMan;
 import shire.the.great.wiffy.R;
-import shire.the.great.conman.common.Constants;
+import shire.the.great.wearman.common.Constants;
 
 public class MonitoringActivity extends AppCompatActivity {
     private static final String LOGTAG = "MonitoringActivity";
@@ -177,18 +176,21 @@ public class MonitoringActivity extends AppCompatActivity {
     }
 
     private void setConnectionStuff(NetworkStateChange connectionStuff) {
-        ((TextView) findViewById(R.id.networkName)).setText(connectionStuff.getNetworkInfo().getTypeName());
-        ((TextView) findViewById(R.id.networkSubName)).setText(connectionStuff.getNetworkInfo().getSubtypeName());
+        if (connectionStuff.getNetworkInfo() != null) {
 
-        switch (connectionStuff.getNetworkInfo().getType()) {
-            case ConnectivityManager.TYPE_WIFI:
-                displayWifiStats(connectionStuff);
-                break;
-            case ConnectivityManager.TYPE_MOBILE:
-                hideWifiStats();
-                break;
-            default:
-                break;
+            ((TextView) findViewById(R.id.networkName)).setText(connectionStuff.getNetworkInfo().getTypeName());
+            ((TextView) findViewById(R.id.networkSubName)).setText(connectionStuff.getNetworkInfo().getSubtypeName());
+
+            switch (connectionStuff.getNetworkInfo().getType()) {
+                case ConnectivityManager.TYPE_WIFI:
+                    displayWifiStats(connectionStuff);
+                    break;
+                case ConnectivityManager.TYPE_MOBILE:
+                    hideWifiStats();
+                    break;
+                default:
+                    break;
+            }
         }
     }
 

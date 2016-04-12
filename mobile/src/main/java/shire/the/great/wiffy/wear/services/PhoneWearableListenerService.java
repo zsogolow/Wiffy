@@ -9,13 +9,12 @@ import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.WearableListenerService;
 
-import shire.the.great.conman.common.Constants;
-import shire.the.great.conman.common.WearConstants;
-import shire.the.great.conman.common.WearableApiHelper;
+import shire.the.great.wearman.common.WearConstants;
+import shire.the.great.wearman.common.WearableApiHelper;
 
-import shire.the.great.conman.models.parcelables.NetworkStateChange;
-import shire.the.great.conman.models.parcelables.SupplicantStateChange;
-import shire.the.great.conman.models.parcelables.WifiStateChange;
+import shire.the.great.wearman.models.parcelables.NetworkStateChange;
+import shire.the.great.wearman.models.parcelables.SupplicantStateChange;
+import shire.the.great.wearman.models.parcelables.WifiStateChange;
 import shire.the.great.conman.wifi.ConnMan;
 
 /**
@@ -44,6 +43,10 @@ public class PhoneWearableListenerService extends WearableListenerService {
         super.onMessageReceived(messageEvent);
         if (messageEvent.getPath().equals(WearConstants.CONNECT)) {
             syncData();
+        }
+
+        if (messageEvent.getPath().equals(WearConstants.DISCONNECT)) {
+            AlwaysActiveSingleton.destroyInstance();
         }
 
         if (messageEvent.getPath().equals(WearConstants.TOGGLE_WIFI_ON)) {

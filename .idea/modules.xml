@@ -6,6 +6,7 @@
       <module fileurl="file://$PROJECT_DIR$/conman/conman.iml" filepath="$PROJECT_DIR$/conman/conman.iml" />
       <module fileurl="file://$PROJECT_DIR$/mobile/mobile.iml" filepath="$PROJECT_DIR$/mobile/mobile.iml" />
       <module fileurl="file://$PROJECT_DIR$/wear/wear.iml" filepath="$PROJECT_DIR$/wear/wear.iml" />
+      <module fileurl="file://$PROJECT_DIR$/wearman/wearman.iml" filepath="$PROJECT_DIR$/wearman/wearman.iml" />
     </modules>
   </component>
 </project>

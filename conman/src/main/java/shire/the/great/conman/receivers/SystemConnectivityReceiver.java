@@ -11,14 +11,14 @@ import android.net.wifi.WifiManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import shire.the.great.conman.common.Constants;
-import shire.the.great.conman.models.parcelables.NetworkStateChange;
-import shire.the.great.conman.models.parcelables.RssiChange;
-import shire.the.great.conman.models.parcelables.SupplicantConnectionChange;
-import shire.the.great.conman.models.parcelables.ScanResultsChange;
-import shire.the.great.conman.models.parcelables.ConnectionChange;
-import shire.the.great.conman.models.parcelables.SupplicantStateChange;
-import shire.the.great.conman.models.parcelables.WifiStateChange;
+import shire.the.great.wearman.common.Constants;
+import shire.the.great.wearman.models.parcelables.NetworkStateChange;
+import shire.the.great.wearman.models.parcelables.RssiChange;
+import shire.the.great.wearman.models.parcelables.SupplicantConnectionChange;
+import shire.the.great.wearman.models.parcelables.ScanResultsChange;
+import shire.the.great.wearman.models.parcelables.ConnectionChange;
+import shire.the.great.wearman.models.parcelables.SupplicantStateChange;
+import shire.the.great.wearman.models.parcelables.WifiStateChange;
 
 /**
  * This class is used to receive events from the OS. The registered events are:

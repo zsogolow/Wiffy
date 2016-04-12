@@ -8,14 +8,15 @@ import android.util.Log;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.wearable.Node;
 
-import shire.the.great.conman.common.Constants;
-import shire.the.great.conman.common.WearableApiHelper;
-import shire.the.great.conman.models.parcelables.NetworkStateChange;
-import shire.the.great.conman.models.parcelables.RssiChange;
-import shire.the.great.conman.models.dataapi.AbstractDataItem;
-import shire.the.great.conman.models.parcelables.ConnectionChange;
-import shire.the.great.conman.models.parcelables.SupplicantStateChange;
-import shire.the.great.conman.models.parcelables.WifiStateChange;
+import shire.the.great.wearman.common.Constants;
+import shire.the.great.wearman.common.WearableApiHelper;
+import shire.the.great.wearman.models.parcelables.NetworkStateChange;
+import shire.the.great.wearman.models.parcelables.RssiChange;
+import shire.the.great.wearman.models.dataapi.AbstractDataItem;
+import shire.the.great.wearman.models.parcelables.ConnectionChange;
+import shire.the.great.wearman.models.parcelables.SupplicantStateChange;
+import shire.the.great.wearman.models.parcelables.WifiStateChange;
+import shire.the.great.wiffy.wear.services.AlwaysActiveSingleton;
 
 /**
  * Created by ZachS on 4/2/2016.
@@ -80,6 +81,7 @@ public class AlwaysActiveConnectivityReceiver extends BroadcastReceiver {
                     return;
                 }
 
+                dataItem.setUpdateId(AlwaysActiveSingleton.getInstance(context).mUpdateId++);
                 WearableApiHelper.updateConnectionData(googleApiClient, dataItem);
 
                 // disconnect the api client:

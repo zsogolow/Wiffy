@@ -1,16 +1,14 @@
-apply plugin: 'com.android.application'
-
+apply plugin: 'com.android.library'
 
 android {
     compileSdkVersion 23
     buildToolsVersion "23.0.2"
 
     defaultConfig {
-        applicationId "shire.the.great.wiffy"
         minSdkVersion 23
         targetSdkVersion 23
-        versionCode 9
-        versionName "1.8"
+        versionCode 1
+        versionName "1.0"
     }
     buildTypes {
         release {
@@ -22,7 +20,7 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    compile 'com.google.android.support:wearable:1.4.0'
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:23.3.0'
     compile 'com.google.android.gms:play-services-wearable:8.4.0'
-    compile project(':wearman')
 }

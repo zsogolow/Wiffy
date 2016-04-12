@@ -4,10 +4,10 @@ import android.net.wifi.ScanResult;
 
 import java.util.List;
 
-import shire.the.great.conman.models.parcelables.ConnectionChange;
-import shire.the.great.conman.models.parcelables.NetworkStateChange;
-import shire.the.great.conman.models.parcelables.SupplicantStateChange;
-import shire.the.great.conman.models.parcelables.WifiStateChange;
+import shire.the.great.wearman.models.parcelables.ConnectionChange;
+import shire.the.great.wearman.models.parcelables.NetworkStateChange;
+import shire.the.great.wearman.models.parcelables.SupplicantStateChange;
+import shire.the.great.wearman.models.parcelables.WifiStateChange;
 
 /**
  * Created by ZachS on 4/2/2016.

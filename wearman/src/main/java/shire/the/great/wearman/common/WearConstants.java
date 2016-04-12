@@ -1,4 +1,4 @@
-package shire.the.great.conman.common;
+package shire.the.great.wearman.common;
 
 /**
  * Created by ZachS on 4/2/2016.
@@ -7,10 +7,14 @@ public class WearConstants {
     // Wear messages to Phone
     public static final String CONNECT =
             "shire.the.great.wiffy.wear.CONNECT";
+    public static final String DISCONNECT =
+            "shire.the.great.wiffy.wear.DISCONNECT";
     public static final String TOGGLE_WIFI_ON =
             "shire.the.great.wiffy.wear.TOGGLE_WIFI_ON";
     public static final String TOGGLE_WIFI_OFF =
             "shire.the.great.wiffy.wear.TOGGLE_WIFI_OFF";
+    public static final String UPDATE_ID =
+            "shire.the.great.wiffy.wear.UPDATE_ID";
 
     public static final String NETWORK_CONNECTION_DATA =
             "/shire.the.great.wiffy.wear.CONNECTION_DATA";

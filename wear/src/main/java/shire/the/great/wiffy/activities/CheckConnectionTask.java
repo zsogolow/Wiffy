@@ -13,9 +13,7 @@ import com.google.android.gms.wearable.Wearable;
 
 import java.util.List;
 
-import shire.the.great.conman.common.Constants;
-import shire.the.great.conman.common.WearConstants;
-import shire.the.great.conman.common.WearableApiHelper;
+import shire.the.great.wearman.common.WearConstants;
 
 /**
  * Created by ZachS on 4/6/2016.
