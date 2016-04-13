@@ -1,7 +1,10 @@
 <resources>
     <string name="app_name">Wiffy</string>
     <string name="app_name_label">wiffy</string>
-    <string name="app_version">1.9</string>
+    <string name="app_version">1.0.1</string>
     <string name="wifi_switch">wifi</string>
+    <string name="disconnected_from_phone">DISCONNECTED</string>
+    <string name="disconnected_from_internet">NO CONNECTION</string>
+    <color name="primaryTextColor">#b3ffffff</color>
 </resources>
 

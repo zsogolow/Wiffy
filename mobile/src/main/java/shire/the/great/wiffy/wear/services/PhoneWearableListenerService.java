@@ -41,12 +41,14 @@ public class PhoneWearableListenerService extends WearableListenerService {
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
         super.onMessageReceived(messageEvent);
+
+        Log.d(LOGTAG, messageEvent.getPath());
         if (messageEvent.getPath().equals(WearConstants.CONNECT)) {
             syncData();
         }
 
         if (messageEvent.getPath().equals(WearConstants.DISCONNECT)) {
-            AlwaysActiveSingleton.destroyInstance();
+            AlwaysActiveSingleton.getInstance(getBaseContext()).destroyInstance(getBaseContext());
         }
 
         if (messageEvent.getPath().equals(WearConstants.TOGGLE_WIFI_ON)) {

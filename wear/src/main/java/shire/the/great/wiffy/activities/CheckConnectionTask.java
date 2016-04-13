@@ -56,16 +56,6 @@ public class CheckConnectionTask extends AsyncTask<GoogleApiClient, Long, List<N
     }
 
     @Override
-    protected void onCancelled(List<Node> nodes) {
-        super.onCancelled(nodes);
-    }
-
-    @Override
-    protected void onCancelled() {
-        super.onCancelled();
-    }
-
-    @Override
     protected List<Node> doInBackground(GoogleApiClient... params) {
         NodeApi.GetConnectedNodesResult nodes = Wearable.NodeApi.getConnectedNodes(params[0]).await();
         return nodes.getNodes();

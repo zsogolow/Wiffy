@@ -14,35 +14,33 @@ import shire.the.great.wiffy.wear.receivers.AlwaysActiveConnectivityReceiver;
 public class AlwaysActiveSingleton {
     private static final String LOGTAG = "AlwaysActiveSingleton";
 
-    private static AlwaysActiveSingleton ourInstance = new AlwaysActiveSingleton();
-    private static Context mContext;
-    private static AlwaysActiveConnectivityReceiver mConnectivityReceiver;
-
-    public int mUpdateId;
+    private static AlwaysActiveSingleton ourInstance;
+    private AlwaysActiveConnectivityReceiver mConnectivityReceiver;
+    private int mUpdateId;
 
     public static AlwaysActiveSingleton getInstance(Context context) {
-        mContext = context;
-
         if (ourInstance == null) {
-            ourInstance = new AlwaysActiveSingleton();
+            ourInstance = new AlwaysActiveSingleton(context);
         }
 
         return ourInstance;
     }
 
-    public static void destroyInstance() {
-        unregisterConnectivityReceiver();
+    public void destroyInstance(Context context) {
+        Log.d(LOGTAG, "destroying singleton");
+        unregisterConnectivityReceiver(context);
         ourInstance = null;
+        mConnectivityReceiver = null;
     }
 
-    private AlwaysActiveSingleton() {
+    private AlwaysActiveSingleton(Context context) {
         mConnectivityReceiver = new AlwaysActiveConnectivityReceiver();
-        registerConnectivityReceiver();
+        registerConnectivityReceiver(context);
         Log.d(LOGTAG, "creating singleton");
         mUpdateId = 0;
     }
 
-    private static void registerConnectivityReceiver() {
+    private void registerConnectivityReceiver(Context context) {
         // AlwaysActiveConnectivityReceiver, used for custom actions
         IntentFilter mConnectivityChangedFilter =
                 new IntentFilter(Constants.CONNECTIVITY_CHANGED_ACTION);
@@ -56,14 +54,22 @@ public class AlwaysActiveSingleton {
                 new IntentFilter(Constants.SUPPLICANT_STATE_CHANGED_ACTION);
 
         // Register the receiver's and their IntentFilter's
-        LocalBroadcastManager.getInstance(mContext).registerReceiver(mConnectivityReceiver, mConnectivityChangedFilter);
-        LocalBroadcastManager.getInstance(mContext).registerReceiver(mConnectivityReceiver, mWifiStateChangedFilter);
-        LocalBroadcastManager.getInstance(mContext).registerReceiver(mConnectivityReceiver, mRssiFilter);
-        LocalBroadcastManager.getInstance(mContext).registerReceiver(mConnectivityReceiver, mNetworkStateFilter);
-        LocalBroadcastManager.getInstance(mContext).registerReceiver(mConnectivityReceiver, mSuppStateFilter);
+        LocalBroadcastManager.getInstance(context).registerReceiver(mConnectivityReceiver, mConnectivityChangedFilter);
+        LocalBroadcastManager.getInstance(context).registerReceiver(mConnectivityReceiver, mWifiStateChangedFilter);
+        LocalBroadcastManager.getInstance(context).registerReceiver(mConnectivityReceiver, mRssiFilter);
+        LocalBroadcastManager.getInstance(context).registerReceiver(mConnectivityReceiver, mNetworkStateFilter);
+        LocalBroadcastManager.getInstance(context).registerReceiver(mConnectivityReceiver, mSuppStateFilter);
     }
 
-    private static void unregisterConnectivityReceiver() {
-        LocalBroadcastManager.getInstance(mContext).unregisterReceiver(mConnectivityReceiver);
+    private void unregisterConnectivityReceiver(Context context) {
+        LocalBroadcastManager.getInstance(context).unregisterReceiver(mConnectivityReceiver);
+    }
+
+    public int getUpdateId() {
+        return mUpdateId;
+    }
+
+    public void incrementUpdateId() {
+        mUpdateId++;
     }
 }

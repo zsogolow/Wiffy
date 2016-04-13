@@ -80,8 +80,9 @@ public class AlwaysActiveConnectivityReceiver extends BroadcastReceiver {
                     googleApiClient.disconnect();
                     return;
                 }
-
-                dataItem.setUpdateId(AlwaysActiveSingleton.getInstance(context).mUpdateId++);
+                int updateId = AlwaysActiveSingleton.getInstance(context).getUpdateId();
+                AlwaysActiveSingleton.getInstance(context).incrementUpdateId();
+                dataItem.setUpdateId(updateId);
                 WearableApiHelper.updateConnectionData(googleApiClient, dataItem);
 
                 // disconnect the api client:
