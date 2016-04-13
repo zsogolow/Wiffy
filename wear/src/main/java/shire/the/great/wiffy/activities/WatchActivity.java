@@ -118,6 +118,7 @@ public class WatchActivity extends Activity implements
     @Override
     protected void onStop() {
         Log.d(LOGTAG, "onStop");
+        hideAllTextViews();
         new SendMessageTask(getBaseContext()).execute(WearConstants.DISCONNECT);
         unregisterConnectivityReceiver();
         mGoogleApiClient.disconnect();
@@ -137,6 +138,14 @@ public class WatchActivity extends Activity implements
         } else {
             new SendMessageTask(this).execute(WearConstants.TOGGLE_WIFI_OFF);
         }
+    }
+
+    private void hideAllTextViews() {
+        mDisconnectedTV.setText("");
+        mSuppStateTV.setText("");
+        mSsidTV.setText("");
+        mConnectionNameTV.setText("");
+        mSubConnectionTV.setText("");
     }
 
     private void setDisconnectedFromPhone(boolean disconnected) {
@@ -320,13 +329,13 @@ public class WatchActivity extends Activity implements
                             mSsidTV.setText(extraInfo);
                             mSubConnectionTV.setText("");
                         } else if (netName.equals("WIFI") && netState.equals("DISCONNECTED")) {
-                            setLimboState();
+//                            setLimboState();
                         } else if (netName.equals("MOBILE") && netState.equals("CONNECTED")) {
                             mConnectionNameTV.setText(netName);
                             mSsidTV.setText("");
                             mSubConnectionTV.setText(netSubName);
                         } else if (netName.equals("MOBILE") && netState.equals("DISCONNECTED")) {
-                            setLimboState();
+//                            setLimboState();
                         }
                     }
                     break;
