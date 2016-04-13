@@ -104,7 +104,6 @@ public class WatchActivity extends Activity implements
 
     @Override
     protected void onPause() {
-        new SendMessageTask(getBaseContext()).execute(WearConstants.DISCONNECT);
         super.onPause();
     }
 
@@ -119,6 +118,7 @@ public class WatchActivity extends Activity implements
     @Override
     protected void onStop() {
         Log.d(LOGTAG, "onStop");
+        new SendMessageTask(getBaseContext()).execute(WearConstants.DISCONNECT);
         unregisterConnectivityReceiver();
         mGoogleApiClient.disconnect();
         super.onStop();
